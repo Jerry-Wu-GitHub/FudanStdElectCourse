@@ -74,11 +74,7 @@
 具体来说，设一个课程表里有 $n$ 门课程，记第 $i$ 门课程的得分为 $score_{i}$ ，记第 $i$ 门课程的学分为 $credit_{i}$ ，则该课程表的课程得分为
 
 $$
-courseScore
-=
-\left( \prod_{i = 1}^{n}{score_{i}^{credit_{i}}} \right)^{\frac{1}{\sum_{i = 1}^{n}{credit_{i}}}}
-=
-\exp(\frac{\sum_{i = 1}^{n}{credit_{i} \ln(score_{i})}}{\sum_{i = 1}^{n}{credit_{i}}})
+courseScore = \left( \prod_{i = 1}^{n}{score_{i}^{credit_{i}}} \right)^{\frac{1}{\sum_{i = 1}^{n}{credit_{i}}}} = \exp(\frac{\sum_{i = 1}^{n}{credit_{i} \ln(score_{i})}}{\sum_{i = 1}^{n}{credit_{i}}})
 $$
 
 #### 课程表的**通勤时间**
