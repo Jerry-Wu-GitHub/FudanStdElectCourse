@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<head>
+  <title>复旦大学选课系统</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta http-equiv="pragma" content="no-cache"/>
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta http-equiv="expires" content="0"/>
+  <meta http-equiv="content-style-type" content="text/css"/>
+  <meta http-equiv="content-script-type" content="text/javascript"/>
+  <script type="text/javascript" src="/xk/static/scripts/jquery/jquery,jquery.ui.core.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/scripts/plugins/jquery-form,jquery-history,jquery-colorbox,jquery-chosen.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/js/plugins/jquery.subscribe,/js/struts2/jquery.struts2,jquery.ui.struts2.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/scripts/beangle/beangle,beangle-ui.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript">var App = {contextPath:"/xk"};jQuery(document).ready(function () {jQuery.struts2_jquery.version="3.6.1";beangle.contextPath=App.contextPath;jQuery.scriptPath = App.contextPath+"/static/";jQuery.struts2_jquerySuffix = "";jQuery.ajaxSettings.traditional = true;jQuery.ajaxSetup ({cache: false});});</script>
+  <script type="text/javascript" src="/xk/static/scripts/my97/WdatePicker-4.72.js?compress=no&ve=1"></script>
+  <link id="jquery_theme_link" rel="stylesheet" href="/xk/static/themes/smoothness/jquery-ui.css?s2j=3.6.1" type="text/css"/>
+  <link id="beangle_theme_link" href="/xk/static/themes/default/beangle-ui,colorbox,chosen.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/xk/static/css/foundation.css" type="text/css"/>
+
+	<script src="/xk/static/scripts/require.config.js?v=3&ve=1"></script>
+	<script>
+	require.baseUrl="/xk/static/scripts";
+	</script>
+	<script src="/xk/static/scripts/require.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/require.js?ve=1"></script>
+
+	<!-- backbone & underscore -- fontend MVC framework -->
+	<script type="text/javascript" src="/xk/static/scripts/underscore.min.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/backbone.min.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/underscore.string.min.js?ve=1"></script>
+	<script>
+	require(['underscore.string'], function(_s) {
+	        _.str = _s;
+	        _.mixin(_.str.exports());
+	});
+	</script>
+<link href="/xk/static/themes/default/home.css?v2" rel="stylesheet" type="text/css" />
+<script src="/xk/static/scripts/jscroll.js" type="text/javascript"></script>
+<script src="/xk/static/scripts/jquery.cookie.js" type="text/javascript"></script>
+
+<style>
+#_menu_folder {
+	height:100%;
+	width:100%;
+	background-color:rgba(0, 0, 0, 0.2);
+	cursor:pointer;
+	position:relative;
+}
+#_menu_folder:hover {
+	height:100%;
+	width:100%;
+	background-color:rgba(222, 222, 222, 1);
+}
+.arrow-right {
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 6px solid rgba(0, 0, 0, 0.6);
+		top:50%;
+		position:absolute;
+}
+.arrow-left {
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent; 
+        border-right:6px solid rgba(0, 0, 0, 0.6);
+		top:50%;
+		position:absolute;
+}
+.color_theme_selector {display:inline-block;width:10px;height:10px;margin-right:2px;}
+</style>
+
+</head>
+<body>
+
+
+				
+<div class="banner">
+	<div>
+		<div class="banner_area">
+			<table cellpadding="0" cellspacing="0"  class="button_box_1">
+				<tr>
+					<td width="25"></td>
+					<td width="90">
+						<a href="javascript:void(0)" class="a3" onclick="editAccount()">我的账户</a>&nbsp;&nbsp;
+					</td>
+					<td width="90">
+						<a href="/xk/home!welcome.action" onclick="return bg.Go(this,'main')" class="a3">返回首页</a>&nbsp;&nbsp;
+					</td>
+					<td>
+						<a href="/xk/logout.action" target="_top" class="a3">退出</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="banner_area">
+<form id="form7366817201" name="form7366817201" action="/xk/home.action" method="post"  >
+
+					<a href="#color_theme_#FFFFFF" id="color_theme_selector_FFFFFF" class="color_theme_selector" style="background-color:#FFFFFF;" title='白色'></a>
+					<a href="#color_theme_#FAF9DE" id="color_theme_selector_FAF9DE" class="color_theme_selector" style="background-color:#FAF9DE;" title='杏仁黄'></a>
+					<a href="#color_theme_#FFF2DE" id="color_theme_selector_FFF2DE" class="color_theme_selector" style="background-color:#FFF2DE;" title='秋叶褐'></a>
+					<a href="#color_theme_#FDE6E0" id="color_theme_selector_FDE6E0" class="color_theme_selector" style="background-color:#FDE6E0;" title='胭脂红'></a>
+					<a href="#color_theme_#E3EDCD" id="color_theme_selector_E3EDCD" class="color_theme_selector" style="background-color:#E3EDCD;" title='青草绿'></a>
+					<a href="#color_theme_#DCE2F1" id="color_theme_selector_DCE2F1" class="color_theme_selector" style="background-color:#DCE2F1;" title='海天蓝'></a>
+					<a href="#color_theme_#E9EBFE" id="color_theme_selector_E9EBFE" class="color_theme_selector" style="background-color:#E9EBFE;" title='葛巾紫'></a>
+					<a href="#color_theme_#EAEAEF" id="color_theme_selector_EAEAEF" class="color_theme_selector" style="background-color:#EAEAEF;" title='极光灰'></a>
+				
+				<a href="/xk/security/my.action" target="_blank" style="color:#ffffff" title="查看登录记录">邬嘉瑞(24300240141)</a>&nbsp;&nbsp;
+					<span style="padding:0 2px;color:#FFF;font-weight:blod;">学生</span>
+					<input  type="hidden" name="security.userCategoryId" value="1" style="width:70px"/>
+
+</form>
+		</div>
+	</div>
+	<br><br>
+	<div style="float:right;display:block;clear:both;">
+		<ul class="nav_box" id="nav_box">
+		</ul>
+	</div>
+</div>
+<script>
+	jQuery('.nav_box li').each(function(index, li) {
+		jQuery(this).focus(function(e) {
+			jQuery(this).blur();
+		});
+		jQuery(this).click(function(e) {
+			jQuery('li', jQuery(this).parent()).each(function(index, li) {
+				jQuery(this).removeClass('current');
+			});
+			jQuery(this).addClass('current');
+		});
+	});
+
+	jQuery(function() {
+		jQuery('#color_theme_selector_FFFFFF').click(function() {
+			jQuery(document.body).css('background-color', '#FFFFFF');
+			jQuery.cookie('_body_color_theme', '#FFFFFF', { expires: 30, path: '/' });
+		});
+		jQuery('#color_theme_selector_FAF9DE').click(function() {
+			jQuery(document.body).css('background-color', '#FAF9DE');
+			jQuery.cookie('_body_color_theme', '#FAF9DE', { expires: 30, path: '/' });
+		});
+		jQuery('#color_theme_selector_FFF2DE').click(function() {
+			jQuery(document.body).css('background-color', '#FFF2DE');
+			jQuery.cookie('_body_color_theme', '#FFF2DE', { expires: 30, path: '/' });
+		});
+		jQuery('#color_theme_selector_FDE6E0').click(function() {
+			jQuery(document.body).css('background-color', '#FDE6E0');
+			jQuery.cookie('_body_color_theme', '#FDE6E0', { expires: 30, path: '/' });
+		});
+		jQuery('#color_theme_selector_E3EDCD').click(function() {
+			jQuery(document.body).css('background-color', '#E3EDCD');
+			jQuery.cookie('_body_color_theme', '#E3EDCD', { expires: 30, path: '/' });
+		});
+		jQuery('#color_theme_selector_DCE2F1').click(function() {
+			jQuery(document.body).css('background-color', '#DCE2F1');
+			jQuery.cookie('_body_color_theme', '#DCE2F1', { expires: 30, path: '/' });
+		});
+		jQuery('#color_theme_selector_E9EBFE').click(function() {
+			jQuery(document.body).css('background-color', '#E9EBFE');
+			jQuery.cookie('_body_color_theme', '#E9EBFE', { expires: 30, path: '/' });
+		});
+		jQuery('#color_theme_selector_EAEAEF').click(function() {
+			jQuery(document.body).css('background-color', '#EAEAEF');
+			jQuery.cookie('_body_color_theme', '#EAEAEF', { expires: 30, path: '/' });
+		});
+		if(jQuery.cookie('_body_color_theme')) {
+			var color = jQuery.cookie('_body_color_theme')
+			jQuery(document.body).css('background-color', color);
+		}
+	});
+</script>
+
+<table id="mainTable" style="width:100%;height:95%;clear:both;float:left;" >
+	<tr>
+	   <td style="height:100%;width:10%" id="leftTD" valign="top">
+<div id="menu_panel" class="ajax_container"></div>
+<script>bg.ready(function(){bg.Go('/xk/home!submenus.action?menu.id=','menu_panel', 'false')});</script>
+	   </td>
+	   <td style="height:100%;width:8px">
+	   		<!-- 折叠菜单栏的bar -->
+			<div id="_menu_folder"><div id="_menu_folder_tri"></div></div>
+	   </td>
+	   <td id="rightTD" valign="top">
+<div id="main" class="ajax_container"></div>
+<script>bg.ready(function(){bg.Go('/xk/home!welcome.action','main', 'false')});</script>
+	   </td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+	function editAccount(){
+        window.open("/xk/security/my.action");
+	}
+	jQuery(function() {
+		jQuery('#_menu_folder_tri').addClass('arrow-left');
+		jQuery('#_menu_folder').click(function() {
+			jQuery('#leftTD').toggle(200);
+			var jq_tri = jQuery('#_menu_folder_tri');
+			if(jq_tri.hasClass('arrow-left')) {
+				jq_tri.removeClass('arrow-left');
+				jq_tri.addClass('arrow-right');
+			} else {
+				jq_tri.removeClass('arrow-right');
+				jq_tri.addClass('arrow-left');
+			}
+		});
+	});
+	
+</script>
+
+</body>
+</html>

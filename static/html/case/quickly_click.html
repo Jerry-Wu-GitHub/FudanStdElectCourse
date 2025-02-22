@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<head>
+  <title>复旦大学选课系统</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta http-equiv="pragma" content="no-cache"/>
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta http-equiv="expires" content="0"/>
+  <meta http-equiv="content-style-type" content="text/css"/>
+  <meta http-equiv="content-script-type" content="text/javascript"/>
+  <script type="text/javascript" src="/xk/static/scripts/jquery/jquery,jquery.ui.core.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/scripts/plugins/jquery-form,jquery-history,jquery-colorbox,jquery-chosen.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/js/plugins/jquery.subscribe,/js/struts2/jquery.struts2,jquery.ui.struts2.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/scripts/beangle/beangle,beangle-ui.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript">var App = {contextPath:"/xk"};jQuery(document).ready(function () {jQuery.struts2_jquery.version="3.6.1";beangle.contextPath=App.contextPath;jQuery.scriptPath = App.contextPath+"/static/";jQuery.struts2_jquerySuffix = "";jQuery.ajaxSettings.traditional = true;jQuery.ajaxSetup ({cache: false});});</script>
+  <script type="text/javascript" src="/xk/static/scripts/my97/WdatePicker-4.72.js?compress=no&ve=1"></script>
+  <link id="jquery_theme_link" rel="stylesheet" href="/xk/static/themes/smoothness/jquery-ui.css?s2j=3.6.1" type="text/css"/>
+  <link id="beangle_theme_link" href="/xk/static/themes/default/beangle-ui,colorbox,chosen.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/xk/static/css/foundation.css" type="text/css"/>
+
+	<script src="/xk/static/scripts/require.config.js?v=3&ve=1"></script>
+	<script>
+	require.baseUrl="/xk/static/scripts";
+	</script>
+	<script src="/xk/static/scripts/require.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/require.js?ve=1"></script>
+
+	<!-- backbone & underscore -- fontend MVC framework -->
+	<script type="text/javascript" src="/xk/static/scripts/underscore.min.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/backbone.min.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/underscore.string.min.js?ve=1"></script>
+	<script>
+	require(['underscore.string'], function(_s) {
+	        _.str = _s;
+	        _.mixin(_.str.exports());
+	});
+	</script>
+
+</head>
+<body>
+
+
+
+<div style="width:100%;text-align:center;">
+	<div class="ui-widget" id="messages19028863761">
+<div class="actionError">
+  <div class="ui-state-error ui-corner-all" style="padding: 0.3em 0.7em;"> 
+    <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+    <span>请不要过快点击</span>
+  </div>
+</div>
+</div>
+
+	[<a href="javascript:void(0)" id="errorMove"></a>]
+	<input type="hidden" name="stackTrace" value=""> 
+	<input type="hidden" name="recorder" value="">
+</div>
+<div id="stackTraceDiv" style="border:1px solid #f42e2e;display:none;padding:0;text-align:left;width:100%;font-size:16px;background:#fefe7e;color:#f42e2e">
+<pre></pre>
+</div>
+<script>
+jQuery(function(){
+	if (parent.location == self.location && (window.history.length <= 1 || window.history.length == null)) {
+		jQuery("#errorMove").text("关闭");
+	}else{
+		jQuery("#errorMove").text("返回前页");
+	}
+	jQuery("#errorMove").click(function(){
+		if (parent.location == self.location && (window.history.length <= 1 || window.history.length == null)) {
+			window.close();
+		}else{
+			history.back(-1);
+		}
+	})
+})
+function displayStactTrace(){
+    var stackTraceDiv = document.getElementById('stackTraceDiv');
+	var ele = document.getElementById('stackTraceA');
+    if(ele.innerHTML == "隐藏日志"){
+    	ele.innerHTML = "显示日志";
+        stackTraceDiv.style.display='none';
+    }else{
+        ele.innerHTML = "隐藏日志";
+		stackTraceDiv.style.display='block';
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1047 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<head>
+  <title>复旦大学选课系统</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta http-equiv="pragma" content="no-cache"/>
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta http-equiv="expires" content="0"/>
+  <meta http-equiv="content-style-type" content="text/css"/>
+  <meta http-equiv="content-script-type" content="text/javascript"/>
+  <script type="text/javascript" src="/xk/static/scripts/jquery/jquery,jquery.ui.core.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/scripts/plugins/jquery-form,jquery-history,jquery-colorbox,jquery-chosen.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/js/plugins/jquery.subscribe,/js/struts2/jquery.struts2,jquery.ui.struts2.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript" src="/xk/static/scripts/beangle/beangle,beangle-ui.js?bg=3.4.3&ve=1"></script>
+  <script type="text/javascript">var App = {contextPath:"/xk"};jQuery(document).ready(function () {jQuery.struts2_jquery.version="3.6.1";beangle.contextPath=App.contextPath;jQuery.scriptPath = App.contextPath+"/static/";jQuery.struts2_jquerySuffix = "";jQuery.ajaxSettings.traditional = true;jQuery.ajaxSetup ({cache: false});});</script>
+  <script type="text/javascript" src="/xk/static/scripts/my97/WdatePicker-4.72.js?compress=no&ve=1"></script>
+  <link id="jquery_theme_link" rel="stylesheet" href="/xk/static/themes/smoothness/jquery-ui.css?s2j=3.6.1" type="text/css"/>
+  <link id="beangle_theme_link" href="/xk/static/themes/default/beangle-ui,colorbox,chosen.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/xk/static/css/foundation.css" type="text/css"/>
+
+	<script src="/xk/static/scripts/require.config.js?v=3&ve=1"></script>
+	<script>
+	require.baseUrl="/xk/static/scripts";
+	</script>
+	<script src="/xk/static/scripts/require.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/require.js?ve=1"></script>
+
+	<!-- backbone & underscore -- fontend MVC framework -->
+	<script type="text/javascript" src="/xk/static/scripts/underscore.min.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/backbone.min.js?ve=1"></script>
+	<script type="text/javascript" src="/xk/static/scripts/underscore.string.min.js?ve=1"></script>
+	<script>
+	require(['underscore.string'], function(_s) {
+	        _.str = _s;
+	        _.mixin(_.str.exports());
+	});
+	</script>
+
+</head>
+<body>
+
+<script language="JavaScript" type="text/JavaScript" src="/xk/static/scripts/countDown.js"></script>
+<link rel="stylesheet" type="text/css" href="static/css/stdElectCourse/style.css?v=1" />
+<div id="electFloatBar" class="electFloatBar sl-fixed sl-fixed-top" style="width:150px;top:0px;right:0px;display:none;">
+	<div style="width:150px;border-bottom:1px solid #DDD;">
+	<a href="#electDescription">课表</a> | 
+	<a href="#allLessonListToolbar">列表</a>
+	</div>
+</div>
+<div  style="text-align:center;display:none;z-index:200;top:0;" class="ajax_container ui-widget-overlay sl-fixed sl-fixed-top"></div>
+
+<div class="sl-fixed sl-fixed-top" style="width:100%;display:none;text-align:center;top:50%;z-index:999;background:#000;">
+<div id="electProgressbar" style="top:50%;width:800px;height:20px;z-index:999;" class="ajax_container sl-fixed sl-fixed-top"></div>
+
+</div>
+<div id="electDescription" style="clear:both;width:96%;margin:auto;padding-bottom:6px;padding-top:2px;border-bottom:1px solid #DDD;line-height:13px;background:#feffef">
+	<span style="float:left;width:13px;height:13px;border:1px solid #006CB2;" class="defaultElected"></span>
+	<span style="float:left;font-weight:bold;">&nbsp;已选课程&nbsp;</span>
+	<span style="float:right;font-weight:bold;color:red;" id="selectedCredits"></span>
+	<span style="clear:right">&nbsp;</span>
+</div>
+<div id="tip" class="ajax_container"><div id="tipPanel" class="ajax_container"><form id="tipForm" name="tipForm" action="/xk/stdElectCourse!defaultPage.action" method="post" target="main" >
+
+		<table class='gridtable' style='width:98%;margin:1%;text-align:center;background:white'>
+				<input type="hidden" name="lesson.id" value=""/>
+				<thead class='gridhead'>
+					<tr>
+						<th style="width:25%;">课程序号</th>
+						<th style="width:25%;">课程名称</th>
+						<th style="width:30px;">学分</th>
+						<th style="width:20%;">教师姓名</th>
+						<th style="width:30%;">时间安排</th>
+						<th style="width:120px;">考试安排</th>
+						<th style="width:60px;">人数</th>
+						<th style="width:60px;">
+							<div style="float:left;text-align:right;width:44px;line-height:20px;">操作</div>
+						</th>
+					</tr>
+				</thead>
+			<tbody>
+			</tbody>
+		</table>
+
+</form>
+</div>
+
+</div>
+
+<div id="courseTable" class="ajax_container">	<table class="gridtable" style="width:100%;text-align:center;">
+		<thead class="gridhead">
+			<tr>
+	        	<th style="width:55px">
+					<div style="width:0px;height:0px;border-top:30px #C7DBFF solid;border-left:79px #DEEDF7 solid; position:relative;">
+			        	<span style="width:42px;text-align:center;position:absolute;top:-30px;left:-40px;">星期</span>
+			        	<span style="width:42px;text-align:center;position:absolute;top:-18px;left:-80px;">小节</span>
+			        </div>
+			    </th>
+				    	<th style="width:99px;;height:20px;">星期日</th>
+				    	<th style="width:99px;;height:20px;">星期一</th>
+				    	<th style="width:99px;;height:20px;">星期二</th>
+				    	<th style="width:99px;;height:20px;">星期三</th>
+				    	<th style="width:99px;;height:20px;">星期四</th>
+				    	<th style="width:99px;;height:20px;">星期五</th>
+				    	<th style="width:99px;;height:20px;">星期六</th>
+			</tr>
+		</thead>
+		<tbody>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第一节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								8:00-8:45
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="1" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="1" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="1" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="1" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="1" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="1" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="1" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第二节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								8:55-9:40
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="2" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="2" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="2" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="2" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="2" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="2" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="2" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第三节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								9:55-10:40
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="3" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="3" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="3" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="3" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="3" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="3" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="3" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第四节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								10:50-11:35
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="4" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="4" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="4" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="4" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="4" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="4" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="4" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第五节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								11:45-12:30
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="5" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="5" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="5" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="5" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="5" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="5" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="5" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第六节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								13:30-14:15
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="6" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="6" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="6" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="6" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="6" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="6" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="6" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第七节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								14:25-15:10
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="7" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="7" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="7" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="7" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="7" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="7" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="7" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第八节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								15:25-16:10
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="8" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="8" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="8" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="8" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="8" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="8" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="8" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第九节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								16:20-17:05
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="9" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="9" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="9" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="9" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="9" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="9" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="9" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+第十节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								17:15-18:00
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="10" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="10" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="10" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="10" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="10" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="10" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="10" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+十一节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								18:30-19:15
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="11" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="11" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="11" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="11" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="11" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="11" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="11" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+十二节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								19:25-20:10
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="12" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="12" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="12" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="12" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="12" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="12" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="12" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+十三节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								20:20-21:05
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="13" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="13" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="13" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="13" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="13" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="13" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="13" weekDay="6"></td>
+					</tr>
+					<tr>
+						<th style="width:99px;;height:20px;background:#DEEDF7;">
+十四节							<br/>
+							<span style="width:99px;;height:12px;line-height:12px;font-size:10px;font-weight:normal;">
+								21:15-22:00
+							</span>
+						</th>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="14" weekDay="7"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="14" weekDay="1"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="14" weekDay="2"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="14" weekDay="3"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="14" weekDay="4"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="14" weekDay="5"></td>
+						<td style="width:99px;;height:20px;" class="electableCell" unit="14" weekDay="6"></td>
+					</tr>
+		</tbody>
+	</table>
+</div>
+
+<style>
+.electableCell {
+    -moz-user-select: none;
+    cursor: default;
+}
+</style>
+<div id="electCart" style="display:none" class="ajax_container"><form id="" name="" action="/xk/stdElectCourse!batchOperator.action" method="post" target="#result" >
+
+	<div class="gridhead" style="margin:0;border-top:1px solid #006CB2;border-left:1px solid #006CB2;border-right:1px solid #006CB2;font-weight:bold;">
+		操作暂存列表
+	</div>
+	<table class="gridtable" style="margin:0;">
+		<thead class="gridhead">
+			<tr>
+				<th style="width:50%;">课程名称</th>
+				<th style="width:50%;">教师姓名</th>
+				<th style="width:40px;">操作</th>
+				<th style="width:40px;">是否需要教材</th>
+				<th style="width:30px;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="5">
+					<input type="button" value="提交" onClick="electCourseTable.electCart.submit(document.electCartForm)"/>
+				</td>	
+			</tr>
+		</tbody>
+	</table>
+
+</form>
+</div>
+
+<br style="clear:both"/>
+
+<div id="allLessonListToolbar" style="clear:both;margin-bottom:10px;" class="ajax_container"></div>
+
+<div class="electTabPanel" style="display:none">
+	<div class="electTabsBar">
+		<div style="width:140px" class="electTab electTabSelected">可选课程</div>
+		<div class="electTab" style="width:140px">已选课程</div>
+		<div id="hisCourseGradeTab" class="electTab" style="width:140px">已修课程</div>
+	</div>
+	<div class="electTabContent" style="clear:left;display:none;">
+		<div class="grid">
+			<div class="gridbar">
+				<div class="girdbar-pgbar"></div>
+			</div>
+			<table class="gridtable" id="electableLessonList">
+				<thead class="gridhead">
+					<tr>
+					  <th width="1px" class="gridselect-top">
+					  </th>
+					  <th width="5%" style="padding-left:3px" title="课程序号"><div style="margin-right:6px"><input type="text" style="width:100%;" maxlength="100" name="electableLesson.no"></div></th>
+					  <th style="padding-left:3px" title="课程代码"><div style="margin-right:6px"><input type="text" style="width:100%;" maxlength="100" name="electableLesson.course.code"></div>  </th>
+					  <th width="15%" style="padding-left:3px" title="课程名称"><div style="margin-right:6px"><input type="text" style="width:100%;" maxlength="100" name="electableLesson.course.name"></div>  </th>
+					  <th width="6%" style="padding-left:3px" title="开课院系"><div style="margin-right:6px"><input type="submit" id="electableLessonList_filter_submit" value="查询"></div>  </th>
+					  <th width="5%" style="padding-left:3px" title="学分"><div style="margin-right:6px"></div>  </th>
+					  <th style="padding-left:3px" title="教师"><div style="margin-right:6px"></div>  </th>
+					  <th width="5%" style="padding-left:3px" title="周课时"><div style="margin-right:6px"></div>  </th>
+					  <th style="padding-left:3px" title="校区"><div style="margin-right:6px"></div>  </th>
+						<th style="padding-left:3px" title="备注"><div style="margin-right:6px"></div>  </th>
+					  <th width="6%"></th>
+					  <th width="10%"></th>
+					  <th width="120"></th>
+					  <th width="5%"></th>
+					</tr>
+					<tr>
+					  <th colspan="2">课程序号</th>
+					  <th>课程代码</th>
+					  <th>课程名称</th>
+					  <th>开课院系</th>
+					  <th>学分</th>
+					  <th>教师</th>
+					  <th>周课时</th>
+					  <th>校区</th>
+					  <th>备注</th>
+					  <th>已选/上限</th>
+					  <th>课程安排</th>
+					  <th>考试安排</th>
+					  <th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="electableLessonList_data">
+				</tbody>
+			</table>
+			
+			<table align="center"><tr><td>输入课程序号或课程代码至少6位的字符，或者输入课程名称至少两个字。</td></tr></table>
+		</div>
+		<div id="electableLessonTips"></div>
+	</div>
+	<div class="electTabContent" style="display:none;">
+		<div class="grid">
+			<table class="gridtable" id="electedLessonList">
+				<thead class="gridhead">
+					<tr>
+						<th width="8%">课程序号</th>
+						<th width="7%">课程代码</th>
+						<th width="15%">课程名称</th>
+						<th width="100px">开课院系</th>
+						<th width="6%">学分</th>
+						<th width="8%">教师</th>
+						<th width="7%">周课时</th>
+						<th width="100px">校区</th>
+						<th width="100px">备注</th>
+						<th width="10%">已选/上限</th>
+						<th width="15%">课程安排</th>
+						<th width="15%">考试安排</th>
+						<th width="15%">是否含A+成绩</th>
+						<th width="15%">是否可申请P/NP</th>
+						<th width="10%">操作</th>
+						
+					</tr>
+				</thead>
+				<tbody id="electedLessonList_data">
+				</tbody>
+			</table>
+		</div>
+		<div style="color: red">提示：课程是否可以选择P/NP功能与培养方案有关，目前该项功能的数据会随着调整实时更新，请在选课结束前关注。如果页面出现明显错误，可能是培养方案绑定问题，请咨询院系教务老师绑定正确的培养方案。</div>
+		<div id="electedLessonTips"></div>
+	</div>
+	<div id="electTabfailCourseStatContent" class="electTabContent" style="display:none;">&nbsp;</div>
+</div>
+
+<script>
+	jQuery(document).ready(function(){
+		jQuery("#hisCourseGradeTab").unbind("click").click(function(){
+			jQuery("#electTabfailCourseStatContent").load("/xk/stdElectCourse!searchHisCourse.action?profileId=3025",function(){
+				jQuery("#electTabfailCourseStatContent").height(Math.max(540,jQuery("#electTabfailCourseStatContent div:first").height()+10));
+			});
+		});
+	});
+</script>
+<div id="lessonDatas" style="display:none;" disabled="disabled" class="ajax_container"></div>
+
+<script language="JavaScript" type="text/JavaScript" src="/xk/static/layui/layui.js"></script>
+<link rel="stylesheet" href="/xk/static/layui/css/layui.css" />
+<style>
+.slider-btn{position:absolute;width:44px;height:44px;left:0;top:-7px;z-index:12;cursor:pointer;background-image:url(static/images/checkSprite.png);background-position:0 -84px;transition:inherit}
+.ver-tips{position:absolute;left:0;bottom:-22px;background:rgba(255,255,255,.9);height:22px;line-height:22px;font-size:12px;width:100%;margin:0;text-align:left;padding:0 8px;transition:all .4s}
+.slider-tips{bottom:0}
+.ver-tips i{display:inline-block;width:22px;height:22px;vertical-align:top;background-image:url(static/images/checkSprite.png);background-position:-4px -1229px}
+.ver-tips span{display:inline-block;vertical-align:top;line-height:22px;color:#455}
+.active-tips{display:block}
+.hidden{display:none}
+.re-btn{position:absolute;left:0;bottom:0;height:28px;padding:0 16px}
+.re-btn a{display:inline-block;width:14px;height:14px;margin:7px 0;background-image:url(static/images/checkSprite.png);background-position:0 -1179px;cursor:pointer}
+.re-btn a:hover{background-position:0 -1193px}
+</style>
+<script>
+layui.use(['layer', 'form', 'element'], function () {
+    window.layer = layui.layer;
+    window.form = layui.form;
+    window.element = layui.element;
+});
+
+var datas = {}
+
+/*图形验证码获取与弹出*/
+function layerVerifyCodeImg(params){
+	params["captcha_response"] = "captcha_response";
+	datas = params;
+    layer.open({
+        id: 3,
+        offset: 'auto',
+        height:'200px',
+        type: 1,
+        title: '图形验证',
+        content:
+        '<div class="verBox" style="height: 220px;width: 300px;text-align:center">'
+        +'<div id="imgVer" style="display:inline-block;width: 280px;"></div>'
+        +'</div>'
+        ,
+        //btn: ['确认'],
+        btnAlign: 'c', //按钮居中
+        success:function(){
+            getImgSwipe();
+        }
+    })
+}
+
+function getImgSwipe(){//验证
+	$.ajax({
+	    url:  "/xk/stdElectCourse!getImgSwipe.action",
+	    data: {},
+	    cache:false,
+	    type: "GET",
+	    async:false,
+	    success: function (data) {
+		    var dataObj=eval("(" + data + ")");
+		    var SrcImage = "data:image/jpg;base64,"+dataObj.SrcImage
+		    var CutImage = "data:image/jpg;base64,"+dataObj.CutImage
+		    var YPosition = dataObj.YPosition
+		    var SrcImageWidth  = dataObj.SrcImageWidth;
+		    var SrcImageHeight = dataObj.SrcImageHeight;
+		    imgVer({
+		        el:'$("#imgVer")',
+		        width:'270',
+		        height:'116',
+		        SrcImage:SrcImage,
+		        CutImage:CutImage,
+		        YPosition:YPosition,
+		        SrcImageWidth:SrcImageWidth,
+		        SrcImageHeight:SrcImageHeight,
+		        userPhone:userPhone,
+		        success:function () {
+		            //验证成功可自定义后续逻辑
+		            electCourseTable.electCart.colorboxSubmit(datas);//验证成功后提交（选/退课）表单
+		        },
+		        error:function () {
+		            //alert('错误什么都不执行')
+		        }
+		    });
+	    },
+	    error: function(){
+	        alert("error");
+	    }
+	});
+}
+
+var userPhone
+function imgVer(Config) {
+    userPhone = Config.userPhone
+    var el = eval(Config.el);
+    var w = Config.width;
+    var h = Config.height;
+    var SrcImage = Config.SrcImage
+    var CutImage = Config.CutImage
+    var YPosition = Config.YPosition
+    // var imgLibrary = Config.img;
+    var SrcImageHeight = Config.SrcImageHeight;
+    var SrcImageWidth = Config.SrcImageWidth;
+    var wbili = w / SrcImageWidth;
+    var hbili = h / SrcImageHeight;
+ 
+    var PL_Size = 48;
+    var padding = 20;
+    var MinN_X = padding + PL_Size;
+    var MaxN_X = w - padding - PL_Size - PL_Size / 6;
+    var MaxN_Y = padding;
+    var MinN_Y = h - padding - PL_Size - PL_Size / 6;
+ 
+    function RandomNum(Min, Max) {
+        var Range = Max - Min;
+        var Rand = Math.random();
+        if (Math.round(Rand * Range) == 0) {
+            return Min + 1;
+        } else if (Math.round(Rand * Max) == Max) {
+            return Max - 1;
+        } else {
+            var num = Min + Math.round(Rand * Range) - 1;
+            return num;
+        }
+    }
+    var imgSrc = SrcImage;
+    var X = '1';
+    var Y = '1';
+    var left_Num = 0;
+    var html = '<div style="position:relative;padding:3px 3px 28px;border:1px solid #ddd;background:#f2ece1;border-radius:16px;">';
+    html += '<div style="position:relative;overflow:hidden;width:' + w + 'px;">';
+    html += '<div style="position:relative;width:' + w + 'px;height:' + h + 'px;">';
+    html += '<img id="scream" src="' + imgSrc + '" style="width:' + w + 'px;height:' + h + 'px;">';
+    html += '<canvas id="puzzleBox" width="' + w + '" height="' + h + '" style="position:absolute;left:0;top:0;z-index:22;"></canvas>';
+    html += '</div>';
+    html += '<div class="puzzle-lost-box" style="position:absolute;width:' + w + 'px;height:' + h + 'px;top:0;left:' + left_Num + 'px;z-index:111;">';
+    html += '<canvas id="puzzleShadow" width="' + w + '" height="' + h + '" style="position:absolute;left:0;top:0;z-index:22;"></canvas>';
+    html += '<canvas id="puzzleLost" width="' + w + '" height="' + h + '" style="position:absolute;left:0;top:0;z-index:33;"></canvas>';
+    html += '</div>';
+    html += '<p class="ver-tips"></p>';
+    html += '</div>';
+    html += '<div class="re-btn"><a></a></div>';
+    html += '</div>';
+    html += '<br>';
+    html += '<div style="position:relative;width:' + w + 'px;margin:auto;touch-action: pan-y">';    //设置触摸区域，防止左滑返回
+    html += '<div style="border:1px solid #c3c3c3;border-radius:24px;background:#ece4dd;box-shadow:0 1px 1px rgba(12,10,10,0.2) inset;">';
+    html += '<p style="font-size:12px;color: #486c80;line-height:28px;margin:0;text-align:right;padding-right:22px;">按住左边滑块，拖动完成上方拼图</p>';
+    html += '</div>';
+    html += '<div class="slider-btn"></div>';
+    html += '</div>';
+    el.html(html);
+ 
+ 
+    var c_l = document.getElementById("puzzleLost");
+    //var c_s = document.getElementById("puzzleShadow");
+    var ctx_l = c_l.getContext("2d");
+    //var ctx_s = c_s.getContext("2d");
+    var img = new Image();
+    img.src = CutImage;
+    img.onload = function () {
+        ctx_l.drawImage(img, 0, YPosition * hbili, 50 * wbili, 50 * hbili);
+    }
+    var moveStart = '';
+    if (detectmob()) {  //Mobile端
+        document.getElementsByClassName('slider-btn')[0].addEventListener("touchstart", function (e) {
+            e = e || window.event;
+            $(this).css({ "background-position": "0 -216px" });
+            moveStart = e.touches[0].pageX;
+        }, false);
+        var moveEnd;
+        document.addEventListener("touchmove", function (e) {
+            e = e || window.event;
+            var moveX = e.touches[0].pageX;
+            var d = moveX - moveStart;
+            if (moveStart == '') {
+            } else {
+                if (d < 0 || d > (w - 2 * padding)) {
+                } else {
+                    $(".slider-btn").css({ "left": d + 'px', "transition": "inherit" });
+                    $("#puzzleLost").css({ "left": d + 'px', "transition": "inherit" });
+                    $("#puzzleShadow").css({ "left": d + 'px', "transition": "inherit" });
+                }
+            }
+            moveEnd = moveX
+        }, false);
+        document.addEventListener("touchend", function (e) {
+            e = e || window.event;
+            var moveEnd_X = moveEnd - moveStart;
+ 
+            if (moveStart == '') {
+            } else {
+                checkResult_VerifyButton(moveEnd_X,wbili,Config);
+            }
+            setTimeout(function () {
+                $(".slider-btn").css({ "left": '0', "transition": "left 0.5s" });
+                $("#puzzleLost").css({ "left": '0', "transition": "left 0.5s" });
+                $("#puzzleShadow").css({ "left": '0', "transition": "left 0.5s" });
+            }, 1000);
+            $(".slider-btn").css({ "background-position": "0 -84px" });
+            moveStart = '';
+            refresh_VerifyButton();
+            // console.log("mobile-refresh");   //mobile刷新
+ 
+        }, false)
+    } else {    //PC端
+        $(".slider-btn").mousedown(function (e) {
+            e = e || window.event;
+            $(this).css({ "background-position": "0 -216px" });
+            moveStart = e.pageX;
+        });
+        var moveEnd;
+        onmousemove = function (e) {
+            e = e || window.event;
+            var moveX = e.pageX;
+            var d = moveX - moveStart;
+            if (moveStart == '') {
+            } else {
+                if (d < 0 || d > (w - 2 * padding)) {
+                } else {
+                    $(".slider-btn").css({ "left": d + 'px', "transition": "inherit" });
+                    $("#puzzleLost").css({ "left": d + 'px', "transition": "inherit" });
+                    $("#puzzleShadow").css({ "left": d + 'px', "transition": "inherit" });
+                }
+            }
+            moveEnd = moveX
+        };
+        onmouseup = function (e) {
+            e = e || window.event;
+            var moveEnd_X = e.pageX - moveStart;
+ 
+            if (moveStart == '') {
+            } else {
+                checkResult_VerifyButton(moveEnd_X,wbili,Config);
+            }
+            setTimeout(function () {
+                $(".slider-btn").css({ "left": '0', "transition": "left 0.5s" });
+                $("#puzzleLost").css({ "left": '0', "transition": "left 0.5s" });
+                $("#puzzleShadow").css({ "left": '0', "transition": "left 0.5s" });
+            }, 1000);
+            $(".slider-btn").css({ "background-position": "0 -84px" });
+            moveStart = '';
+            refresh_VerifyButton();
+        }
+    }
+}
+ 
+function checkResult_VerifyButton(moveEnd_X,wbili,Config) {
+    $.ajax({
+        url: "/xk/stdElectCourse!rstImgSwipe.action",
+        data: { moveEnd_X: moveEnd_X, wbili: wbili },
+        type: "POST",
+        cache: false,
+        success: function (dataJson) {
+            var data=eval("(" + dataJson + ")");
+            if (data.success) {
+                $(".ver-tips").html('<i style="background-position:-4px -1207px;"></i><span style="color:#42ca6b;">验证通过</span><span></span>');
+                $(".ver-tips").addClass("slider-tips");
+                $(".puzzle-lost-box").addClass("hidden");
+                $("#puzzleBox").addClass("hidden");
+                setTimeout(function () {
+                    $(".ver-tips").removeClass("slider-tips");
+                    layer.closeAll();
+                    imgVer(Config);
+                }, 1000);
+                Config.success();
+            } else {
+                $(".ver-tips").html('<i style="background-position:-4px -1229px;"></i><span style="color:red;">验证失败:</span><span style="margin-left:4px;">拖动滑块将悬浮图像正确拼合</span>');
+                $(".ver-tips").addClass("slider-tips");
+                setTimeout(function () {
+                    $(".ver-tips").removeClass("slider-tips");
+                }, 2000);
+
+            }
+        }
+    })
+}
+ 
+function refresh_VerifyButton() {
+    $(".re-btn a").unbind('click').click(function () {
+         getImgSwipe();
+    })
+}
+
+function detectmob() {
+    if (navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)
+    ) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+</script>
+</body>
+</html>
+	<div style="display:none">
+<div id="validateCodeBoxDiv" style="text-align:center;" class="ajax_container">			<table style="margin:auto" width="90%">
+				<tr>
+					<td><input name="captcha_response" class="captcha_response" type="text" style="width:45px;height:16px"/>
+<img style="width:70px; height:22px;cursor: pointer;vertical-align:top;" src="/xk/captcha/image.action" alt="看不清,更换一张" onclick="refreshCaptcha(this)"/>
+<script>function refreshCaptcha(object){object.src="/xk/captcha/image.action?d="+(new Date().getTime());}</script></td>
+					<td>
+						<input type="button" class="buttonStyle" value="提交" onClick="checkValidate()" id="stdSubmitButton">
+					</td>
+				</tr>
+			</table>
+</div>
+
+	</div>
+	
+	<script>
+		function checkValidate(){
+			jQuery("#stdSubmitButton").prop('disabled', true);
+			var captcha_response = jQuery("input[name='captcha_response']").val();
+			jQuery("#validateCodeBoxDiv").data("submit","1");
+			jQuery("#validateCodeBoxDiv").data("captcha_response", captcha_response);
+			jQuery.colorbox.close();
+		}
+	</script>
+	
+<script>
+	// 重修任务ID
+	var global = {};
+	global.retake = (function(){
+		// 学生在进入选课系统时已经选的重修课程
+		var lessonIds = [];
+		var isRetake = function(lessonId) {
+			for(var i = 0; i < lessonIds.length; i++) {
+				if(lessonIds[i] == lessonId) {
+					return true;
+				}
+			}
+			return false;
+		};
+		var addLesson = function(lessonId) {
+			lessonIds[lessonIds.length] = lessonId;
+		};
+		var removeLesson = function(lessonId) {
+			for(var i = 0; i < lessonIds.length; i++) {
+				if(lessonIds[i] == lessonId) {
+					lessonIds[i] = null;
+				}
+			}
+		}
+		var addStyle = function(jDom) {
+			jDom.addClass("retakeLesson");
+		};
+		var removeStyle = function(jDom) {
+			jDom.removeClass("retakeLesson");
+		};
+		return {
+			isRetake : isRetake, 
+			addLesson : addLesson, 
+			addStyle : addStyle, 
+			removeLesson : removeLesson,
+			removeStyle : removeStyle
+		};
+	})();
+var takedLessonsStr = [
+];
+
+var otherTakedLessonsStr = [
+]
+	global.qrScriptSrc = "/xk/stdElectCourse!queryStdCount.action?projectId=1&semesterId=487";
+	
+    function formatName(lesson){
+	    return lesson.name.replace('<sup>','(小项：').replace('</sup>',')');
+	}
+</script>
+
+<script type="text/javascript" src="/xk/static/scripts/taffydb/taffy.js"></script>
+<script id="queryLesson_script" type="text/javascript" src="/xk/stdElectCourse!queryLesson.action?profileId=3025"></script>
+
+
+<script type="text/javascript" src="/xk/static/scripts/stdElectionCourse-0.3.2-zh.js?v=114"></script>
+
+
+<script type="text/javascript">	
+	jQuery(function(){
+		// 放课时间倒计时
+		/*var startTimeStr2 = 'Dec 16, 2024 1:00:21 PM';
+		startTimeStr2 = startTimeStr2.replace('-','/').replace('-','/');
+		$(".count_down").countDown({
+        	endTimeStr:startTimeStr2,//结束时间
+        	daySelector:".day_num",
+            hourSelector:".hour_num",
+            minSelector:".min_num",
+            secSelector:".sec_num"
+		});*/
+		jQuery("#electFloatBar").trigger("initStdElectCourseDefaultPage",new function(){
+			var electableIds = {};
+			var preElectIds = {};
+			var electedIds = {};
+			var hasOrderTextbookLessonIds = {};
+			var unWithdrawableLessonIds = {};
+			var hisCourses = {};
+				hisCourses["c40848"]=true;
+				hisCourses["c513749"]=true;
+				hisCourses["c516180"]=true;
+				hisCourses["c42995"]=true;
+				hisCourses["c517396"]=true;
+				hisCourses["c43751"]=true;
+				hisCourses["c513359"]=true;
+				hisCourses["c42043"]=true;
+				hisCourses["c42045"]=true;
+				hisCourses["c508936"]=true;
+			var courseSubstitutions=[];
+				electableIds["l737991"] = "self";
+				electableIds["l739850"] = "self";
+				electableIds["l742339"] = "self";
+				electableIds["l738768"] = "self";
+				electableIds["l738278"] = "self";
+				electableIds["l738211"] = "self";
+				electableIds["l739778"] = "self";
+				electableIds["l739951"] = "self";
+				electableIds["l740444"] = "self";
+				electedIds["l737991"] = true;
+				electedIds["l739850"] = true;
+				electedIds["l739778"] = true;
+				electedIds["l740444"] = true;
+				electedIds["l738278"] = true;
+				electedIds["l739951"] = true;
+				electedIds["l738211"] = true;
+				electedIds["l742339"] = true;
+				electedIds["l738768"] = true;
+			return	[
+							"/xk",
+							"3025",
+							electableIds,
+							electedIds,
+							preElectIds,
+							hasOrderTextbookLessonIds,
+							unWithdrawableLessonIds,
+							{
+								7 : " 星期日 ",1 : " 星期一 ",2 : " 星期二 ",3 : " 星期三 ",4 : " 星期四 ",5 : " 星期五 ",6 : " 星期六 "
+							},
+							{conflictTimeCount:0,checkType:true,isContinuous:true},
+							false,
+							hisCourses,
+							courseSubstitutions,
+							false,
+							{checkMax:true,checkMin:false},
+							false,
+							false,
+							true,
+							1,
+							0
+							
+						];
+		});
+		jQuery("#electFloatBar").unbind("initStdElectCourseDefaultPage");
+	})
+</script>
+
+<script>
+	function initStdElectCourse(){
+		jQuery("#electFloatBar").bind("initStdElectCourseDefaultPage",function(e,base,profileId,
+			electableIds,electedIds,preElectIds,hasOrderTextbookLessonIds,unWithdrawableLessonIds,
+			weekDays,checkTimeConflict,noRetake,hisCourses,courseSubstitutions,
+			batchOperator,limitCheck,preElect,virtualWalletEnable,validateCode,validateElectCount,electedCount){//增加验证码
+			window.electCourseTable.showProgressbar();
+			var lessons = TAFFY(lessonJSONs);
+			var takedLessonJSONs = eval(takedLessonsStr);		
+			
+			lessons.insert(takedLessonJSONs);
+			//var _removedCount = lessons(function() { return !electableIds["l"+this.id]; }).remove();//去掉2017.5.10
+			var _removedCount = 0;
+	
+			var otherTakedLessonJSONs = eval(otherTakedLessonsStr);
+			lessons.insert(otherTakedLessonJSONs);
+			var lessonIds = new Array(lessonJSONs.length + takedLessonJSONs.length + otherTakedLessonJSONs.length - _removedCount);
+			var courseTypeId2HasLesson = {};
+			window.electCourseTable.lessons = lessons;
+			
+			lessons().each(function(lessonArray, index) {		
+				var lessonId = lessonArray.id;
+				var elected = electedIds["l"+lessonId]==true;
+				var preElect = preElectIds["l"+lessonId] != null;
+				var virtualCost = preElectIds["l"+lessonId];
+				var hasOrderTextbook = hasOrderTextbookLessonIds["l"+lessonId]==true;
+				var withdrawable = !unWithdrawableLessonIds["l"+lessonId] == true;
+				lessons(lessonArray.___id).update({
+					assigned : (electableIds["l" + lessonId]=="assign"),
+					elected : elected,
+					preElect : preElect,
+					virtualCost : virtualCost,
+					defaultElected : elected,
+					hasOrderTextBook : hasOrderTextbook,
+					withdrawable : withdrawable
+				});
+				courseTypeId2HasLesson[lessonArray.courseTypeId] = true;
+				lessonIds.push(lessonArray.id);
+				
+			});
+			
+			for(courseTypeId in courseTypeId2HasLesson) {
+				jQuery(".electGroupResult[courseTypeId='"+courseTypeId+"']").attr("hasLesson",true);
+			}
+			window.electCourseTable.lessonIds = lessonIds.join(",");
+			
+			window.electCourseTable.config.weekDays = weekDays;
+			window.electCourseTable.config.checkTimeConflict = checkTimeConflict || false;
+			window.electCourseTable.config.noRetake = noRetake;
+			window.electCourseTable.config.hisCourses = hisCourses;
+			window.electCourseTable.config.courseSubstitutions = courseSubstitutions;
+			window.electCourseTable.config.batchOperator = batchOperator;
+			window.electCourseTable.config.limitCheck = limitCheck;
+			window.electCourseTable.config.profileId = profileId;
+			window.electCourseTable.config.preElect = preElect;
+			window.electCourseTable.config.virtualWalletEnable = virtualWalletEnable;
+			///////////////////二次开发/////////////////////
+			window.electCourseTable.config.validateCode = validateCode;
+			window.electCourseTable.config.validateElectCount = validateElectCount;
+			stdElectedCount = electedCount;
+			/////////////////////////////////////////////
+			window.electCourseTable.init();
+			
+			jQuery(".gridempty").hide();
+			jQuery(".electTabPanel").show();
+			
+			// jQuery("body").append("<textarea
+			// style='width:100%'>"+lessons+"</textarea>")
+			jQuery(".electTabPanel").find(".electTabSelected").trigger("click");
+			
+		});
+		jQuery("#electFloatBar").trigger("initStdElectCourseDefaultPage", initStdElectCourseFun());
+		jQuery("#electFloatBar").unbind("initStdElectCourseDefaultPage");
+	}
+	
+	function initStdElectCourseFun(){
+		var electableIds = {};//这个变量没有意义了
+		var preElectIds = {};
+		var electedIds = {};
+		var hasOrderTextbookLessonIds = {};
+		var unWithdrawableLessonIds = {};
+		var hisCourses = {};
+			hisCourses["c40848"]=true;
+			hisCourses["c513749"]=true;
+			hisCourses["c516180"]=true;
+			hisCourses["c42995"]=true;
+			hisCourses["c517396"]=true;
+			hisCourses["c43751"]=true;
+			hisCourses["c513359"]=true;
+			hisCourses["c42043"]=true;
+			hisCourses["c42045"]=true;
+			hisCourses["c508936"]=true;
+		var courseSubstitutions=[];
+		
+		//找出已选的任务
+		var lessonQuery = window.electCourseTable.lessons;
+		var _lessons = lessonQuery().get();
+		for(var i = 0; i < _lessons.length; i++) {
+			var lesson = _lessons[i];
+			if(lesson.elected){
+				electedIds["l"+lesson.id] = true;
+			}
+		}
+		return	[
+						"/xk",
+						window.electCourseTable.config.profileId,
+						electableIds,
+						electedIds,
+						preElectIds,
+						hasOrderTextbookLessonIds,
+						unWithdrawableLessonIds,
+						window.electCourseTable.config.weekDays,
+						window.electCourseTable.config.checkTimeConflict,
+						window.electCourseTable.config.noRetake,
+						window.electCourseTable.config.hisCourses,
+						window.electCourseTable.config.courseSubstitutions,
+						window.electCourseTable.config.batchOperator,
+						window.electCourseTable.config.limitCheck,
+						window.electCourseTable.config.preElect,
+						window.electCourseTable.config.virtualWalletEnable,
+						window.electCourseTable.config.validateCode,
+						window.electCourseTable.config.validateElectCount,
+						window.stdElectedCount
+						
+					];
+		}
+		jQuery(document).ready(function(){
+			var  selectedCredits = parseFloat(0);
+			jQuery("#electedLessonList td[class='lessonCredits']").each(function(){
+				selectedCredits = selectedCredits + parseFloat(jQuery(this).html().trim()); 
+			});
+			jQuery("#selectedCredits").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选学分："+ selectedCredits);//页面显示已选学分
+		});	
+</script>
+</body>
+</html>
+
